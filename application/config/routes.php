@@ -51,16 +51,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   |		my-controller/my-method	-> my_controller/my_method
  */
 $route['default_controller'] = 'welcome';
-
-//  sub category
 $route['admin/sub/category'] = 'admin/sub_category';
 $route['admin/sub/category/save'] = 'admin/sub_category/save';
 $route['admin/sub/category/edit'] = 'admin/sub_category/edit';
 $route['admin/sub/category/update'] = 'admin/sub_category/update';
 $route['admin/sub/category/delete'] = 'admin/sub_category/delete';
-
-//  gift type
-$route['admin/gift/type'] = 'admin/gift_type';
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

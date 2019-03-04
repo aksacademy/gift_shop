@@ -37,6 +37,10 @@
         <script src="<?php echo base_url() ?>assets/admin/vendor/modernizr/modernizr.js"></script>
 
 
+        
+        <link rel="stylesheet" href="<?php echo base_url() ?>assets/admin/vendor/dropzone/css/basic.css" />
+        <link rel="stylesheet" href="<?php echo base_url() ?>assets/admin/vendor/dropzone/css/dropzone.css" />
+        <script src="<?php echo base_url() ?>assets/admin/vendor/dropzone/dropzone.js"></script>
 
     </head>
     <body>

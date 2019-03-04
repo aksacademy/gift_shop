@@ -22,10 +22,10 @@
                             </a>
                         </li>
                         <li>
-                            <a href="mailbox-folder.html">
+                            <a href="<?php echo base_url() ?>admin/menu">
                                 <span class="pull-right label label-primary">182</span>
                                 <i class="fa fa-envelope" aria-hidden="true"></i>
-                                <span>Mailbox</span>
+                                <span>Menu</span>
                             </a>
                         </li>
 
@@ -53,11 +53,6 @@
                                 <span>Gift</span>
                             </a>
                             <ul class="nav nav-children">
-                                <li>
-                                    <a href="<?php echo base_url() ?>admin/gift/type">
-                                        Gift Type
-                                    </a>
-                                </li>
                                 <li>
                                     <a href="<?php echo base_url() ?>admin/gift/add">
                                         Add Gift

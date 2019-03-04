@@ -3,32 +3,33 @@
 class Gift extends CI_Controller {
 
     public function index() {
-        //$result['sub_category'] = $this->Sub_category_model->get_all();
-        $result['category'] = $this->Category_model->get_all();
-
-        $this->load->view('admin/header');
-        $this->load->view('admin/sidebar');
-        $this->load->view('admin/gift_list_select', $result);
-        $this->load->view('admin/footer');
-    }
-
-    public function list_() {
-        //$result['sub_category'] = $this->Sub_category_model->get_all();
-
-        $category_id = $this->input->get_post('category_id');
-        $sub_category_id = $this->input->get_post('sub_category_id');
-        $gift_type_id = $this->input->get_post('gift_type_id');
-        $result['category'] = $this->Category_model->get_by_id($category_id);
-        $result['sub_category'] = $this->Sub_category_model->get_by_id($sub_category_id);
-        $result['gift_type'] = $this->Gift_type_model->get_by_id($gift_type_id);
-        $result['gift'] = $this->Gift_model->get_by_gift_type_id($gift_type_id);
-
-
+        
+        $result['gift'] = $this->Gift_model->get_all();
+        
         $this->load->view('admin/header');
         $this->load->view('admin/sidebar');
         $this->load->view('admin/gift_list', $result);
         $this->load->view('admin/footer');
     }
+
+    /* public function list_() {
+      //$result['sub_category'] = $this->Sub_category_model->get_all();
+
+      $category_id = $this->input->get_post('category_id');
+      $sub_category_id = $this->input->get_post('sub_category_id');
+      $gift_type_id = $this->input->get_post('gift_type_id');
+      $result['category'] = $this->Category_model->get_by_id($category_id);
+      $result['sub_category'] = $this->Sub_category_model->get_by_id($sub_category_id);
+      $result['gift_type'] = $this->Gift_type_model->get_by_id($gift_type_id);
+      $result['gift'] = $this->Gift_model->get_by_gift_type_id($gift_type_id);
+
+
+      $this->load->view('admin/header');
+      $this->load->view('admin/sidebar');
+      $this->load->view('admin/gift_list', $result);
+      $this->load->view('admin/footer');
+      }
+     */
 
     public function add() {
         //$result['sub_category'] = $this->Sub_category_model->get_all();
@@ -42,7 +43,6 @@ class Gift extends CI_Controller {
 
     public function save() {
 
-        echo '';
         $config['upload_path'] = 'upload/'; //
         if (!is_dir($config['upload_path'])) {
             mkdir($config['upload_path'], 0777, TRUE);
@@ -57,9 +57,6 @@ class Gift extends CI_Controller {
         } else {
             $uploaded_data = $this->upload->data();
             $image = $config['upload_path'] . $uploaded_data['file_name'];
-            $category_id = $this->input->post('category_id');
-            $sub_category_id = $this->input->post('sub_category_id');
-            $gift_type_id = $this->input->post('gift_type_id');
             $title = $this->input->post('title');
             $description = $this->input->post('description');
             $price = $this->input->post('price');
@@ -68,9 +65,6 @@ class Gift extends CI_Controller {
             $gift = array(
                 "title" => $title,
                 "description" => $description,
-                "category_id" => $category_id,
-                "sub_category_id" => $sub_category_id,
-                "gift_type_id" => $gift_type_id,
                 "price" => $price,
                 "featured" => $featured,
                 "image" => $image,
@@ -78,22 +72,19 @@ class Gift extends CI_Controller {
 
             $inserted = $this->Gift_model->save($gift);
             if ($inserted > 0) {
-                echo 'Gift has been added successfully';
+                $this->session->set_flashdata('msg', 'Gift has been inserted successfully');
                 //$this->session->set_flashdata('msg', "Sub category has been inserted successfully.");
             } else {
-                echo 'Gift could not be be added. Please try again later.11';
+                $this->session->set_flashdata('err', 'Gift could not be be inserted. Please try again later.11');
             }
+            redirect(base_url() . 'admin/gift');
         }
     }
 
     public function edit() {
 
         $gift_id = $this->input->get('id');
-        $gift = $this->Gift_model->get_by_id($gift_id);
-        $result['gift'] = $gift;
-        $result['category'] = $this->Category_model->get_all();
-        $result['sub_category'] = $this->Sub_category_model->get_by_category_id($gift->category_id);
-        $result['gift_type'] = $this->Gift_type_model->get_by_sub_category_id($gift->sub_category_id);
+        $result['gift'] = $this->Gift_model->get_by_id($gift_id);
         $this->load->view('admin/header');
         $this->load->view('admin/sidebar');
         $this->load->view('admin/gift_edit', $result);
@@ -103,9 +94,6 @@ class Gift extends CI_Controller {
     public function update() {
 
         $gift_id = $this->input->post('gift_id');
-        $category_id = $this->input->post('category_id');
-        $sub_category_id = $this->input->post('sub_category_id');
-        $gift_type_id = $this->input->post('gift_type_id');
         $title = $this->input->post('title');
         $description = $this->input->post('description');
         $price = $this->input->post('price');
@@ -114,9 +102,6 @@ class Gift extends CI_Controller {
         $gift = array(
             "title" => $title,
             "description" => $description,
-            "category_id" => $category_id,
-            "sub_category_id" => $sub_category_id,
-            "gift_type_id" => $gift_type_id,
             "price" => $price,
             "featured" => $featured,
         );
@@ -128,7 +113,7 @@ class Gift extends CI_Controller {
         } else {
             $this->session->set_flashdata('err', 'Gift could not be be updated. Please try again later.11');
         }
-        redirect(base_url() . 'admin/gift/list_?category_id=' . $category_id . '&sub_category_id=' . $sub_category_id . '&gift_type_id=' . $gift_type_id);
+        redirect(base_url() . 'admin/gift');
     }
 
     public function delete() {
@@ -141,20 +126,15 @@ class Gift extends CI_Controller {
         } else {
             $this->session->set_flashdata('err', 'Gift could not be be deleted. Please try again later.11');
         }
-        redirect(base_url() . 'admin/gift/list_?category_id=' . $gift->category_id . '&sub_category_id=' . $gift->sub_category_id . '&gift_type_id=' . $gift->gift_type_id);
+        redirect(base_url() . 'admin/gift');
     }
 
     public function gallery() {
         //$result['sub_category'] = $this->Sub_category_model->get_all();
 
-        $category_id = $this->input->get('category_id');
-        $sub_category_id = $this->input->get('sub_category_id');
-        $gift_type_id = $this->input->get('gift_type_id');
         $gift_id = $this->input->get('id');
 
-        $result['category'] = $this->Category_model->get_by_id($category_id);
-        $result['sub_category'] = $this->Sub_category_model->get_by_id($sub_category_id);
-        $result['gift_type'] = $this->Gift_type_model->get_by_id($gift_type_id);
+        $result['gift_gallery'] = $this->Gift_model->get_gallery($gift_id);
         $result['gift'] = $this->Gift_model->get_by_id($gift_id);
 
         $this->load->view('admin/header');
