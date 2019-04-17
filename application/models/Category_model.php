@@ -3,6 +3,12 @@
 class Category_model extends CI_Model {
 
     public function get_all() {
+        $query = $this->db->get('category');
+        return $query->result();
+    }
+    
+    
+    public function get_all_with_menu() {
         //$query = $this->db->query('select * from menu, category where menu.menu_id = category.menu_id');
         $this->db->select('*');
         $this->db->from('menu');
@@ -43,4 +49,10 @@ class Category_model extends CI_Model {
         return $query->result();
     }
     
+    public function check_for_unique_category($category_id, $category_name, $menu_id) {
+        $this->db->where_not_in('category_id', $category_id);
+        $this->db->where(array('category_name' => $category_name, 'menu_id' => $menu_id));
+        $query = $this->db->get('category');
+        return $query->num_rows();
+    }
 }

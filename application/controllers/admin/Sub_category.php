@@ -1,6 +1,6 @@
 <?php
 
-class Sub_category extends CI_Controller {
+class Sub_category extends Admin_Controller {
 
     public function index() {
         //$result['sub_category'] = $this->Sub_category_model->get_all();
@@ -72,5 +72,22 @@ class Sub_category extends CI_Controller {
             echo("Gift type could not be deleted. Please try again later.");
         }
         //redirect(base_url() . 'admin/sub/category');
+    }
+    
+    public function unique() {
+        $menu_id = $this->input->post('menu_id');
+        $category_id = $this->input->post('category_id');
+        $sub_category_id = $this->input->post('sub_category_id');
+        $sub_category_name = $this->input->post('sub_category_name');
+        
+        $total_record = $this->Sub_category_model->check_for_unique_sub_category($sub_category_id, $sub_category_name, $category_id, $menu_id);
+        //if(count)
+        $valid = true;
+        if ($total_record > 0) {
+            $valid = false;
+        }
+        echo json_encode(array(
+            'valid' => $valid
+        ));
     }
 }

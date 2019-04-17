@@ -13,12 +13,12 @@
                 </header>
 
                 <div class="panel-body">
-                    <form class="form-horizontal form-bordered" method="post" action="<?php echo base_url() ?>admin/category/update">
+                    <form class="form-horizontal form-bordered" id="categoryForm" method="post" action="<?php echo base_url() ?>admin/category/update">
                         <div class="form-group">
                             <div class="col-md-4">
 
-                                <select name="menu_id" data-plugin-selectTwo class="form-control populate input-sm mb-md">
-                                    <option>Select Menu</option>
+                                <select name="menu_id" id="menu_id" data-plugin-selectTwo class="form-control populate input-sm mb-md">
+                                    <option value="">Select Menu</option>
                                     <?php
                                     foreach ($menu as $m) {
                                         if ($m->menu_id == $category->menu_id) {
@@ -37,11 +37,11 @@
                             </div>
                             <div class="col-md-4">
                                 <input type="hidden" name="category_id" value="<?php echo $category->category_id ?>" />
-                                <input type="text" class="form-control input-sm mb-md" name="category_name" placeholder="Enter category name" value="<?php echo $category->category_name ?>">
+                                <input type="text" class="form-control input-sm mb-md" name="category_name" id="category_name" placeholder="Enter category name" value="<?php echo $category->category_name ?>">
                             </div>
                             <div class="col-md-3">
-                                <button class="btn btn-primary">Submit</button>
-                                <a href="<?php echo base_url() ?>admin/sub/category" class="btn btn-default">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <a href="<?php echo base_url() ?>admin/category" class="btn btn-default">Cancel</a>
                             </div>
                         </div>
                     </form>
@@ -50,3 +50,58 @@
         </div>
     </div>
 </section>
+
+<script>
+                $(document).ready(function () {
+                    $('#categoryForm').formValidation({
+                        framework: 'bootstrap',
+                        icon: {
+                            valid: 'glyphicon glyphicon-ok',
+                            invalid: 'glyphicon glyphicon-remove',
+                            validating: 'glyphicon glyphicon-refresh'
+                        },
+                        fields: {
+                            menu_id: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'The menu name is required'
+                                    },
+                                    remote: {
+                                        url: '<?php echo base_url() ?>admin/category/unique',
+                                        type: 'post',
+                                        data: function (validator) {
+                                            return{
+                                                category_id: <?php echo $category->category_id ?>,
+                                                category_name: validator.getFieldElements('category_name').val(),
+                                            };
+
+                                            //category_id: 12
+                                        },
+                                        message: 'This category already exists'
+                                    }
+                                }
+                            },
+                            category_name: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'The category name is required'
+                                    },
+                                    remote: {
+                                        url: '<?php echo base_url() ?>admin/category/unique',
+                                        type: 'post',
+                                        data: function (validator) {
+                                            return{
+                                                category_id: <?php echo $category->category_id ?>,
+                                                menu_id: validator.getFieldElements('menu_id').val(),
+                                            };
+
+                                            //category_id: 12
+                                        },
+                                        message: 'This category already exists'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+            </script>

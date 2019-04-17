@@ -59,3 +59,5 @@ $route['admin/sub/category/delete'] = 'admin/sub_category/delete';
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+$route['admin'] = 'admin/login';

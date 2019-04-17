@@ -33,4 +33,11 @@ class Menu_model extends CI_Model {
         $deleted = $this->db->delete('menu');
         return $deleted;
     }
+    
+    public function check_for_unique_menu($menu_id, $menu_name) {
+        $this->db->where_not_in('menu_id', $menu_id);
+        $this->db->where('menu_name', $menu_name);
+        $query = $this->db->get('menu');
+        return $query->num_rows();
+    }
 }

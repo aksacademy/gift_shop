@@ -30,13 +30,13 @@
                     <h2 class="panel-title">Add Menu</h2>
                 </header>
                 <div class="panel-body">
-                    <form class="form-horizontal form-bordered" method="post" action="<?php echo base_url() ?>admin/menu/save">
+                    <form class="form-horizontal form-bordered" id="menuForm" method="post" action="<?php echo base_url() ?>admin/menu/save">
                         <div class="form-group">
                             <div class="col-md-4">
                                 <input type="text" class="form-control input-sm mb-md" name="menu_name" placeholder="Enter menu name">
                             </div>
                             <div class="col-md-3">
-                                <button class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
                         </div>
                     </form>
@@ -82,3 +82,33 @@
         </div>
     </section>
 </section>
+
+<script>
+    $(document).ready(function () {
+        $('#menuForm').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                menu_name: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The menu name is required'
+                        },
+                        remote: {
+                            url: '<?php echo base_url() ?>admin/menu/unique',
+                            type: 'post',
+                            data: {
+                                menu_id: 0,
+                            },
+                            message: 'This menu name already exists'
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>

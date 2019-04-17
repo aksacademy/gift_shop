@@ -1,11 +1,11 @@
 <?php
 
-class Gift extends CI_Controller {
+class Gift extends Admin_Controller {
 
     public function index() {
-        
+
         $result['gift'] = $this->Gift_model->get_all();
-        
+
         $this->load->view('admin/header');
         $this->load->view('admin/sidebar');
         $this->load->view('admin/gift_list', $result);
@@ -60,12 +60,14 @@ class Gift extends CI_Controller {
             $title = $this->input->post('title');
             $description = $this->input->post('description');
             $price = $this->input->post('price');
+            $gst = $this->input->post('gst');
             $featured = $this->input->post('featured');
 
             $gift = array(
                 "title" => $title,
                 "description" => $description,
                 "price" => $price,
+                "gst" => $gst,
                 "featured" => $featured,
                 "image" => $image,
             );
@@ -97,12 +99,14 @@ class Gift extends CI_Controller {
         $title = $this->input->post('title');
         $description = $this->input->post('description');
         $price = $this->input->post('price');
+        $gst = $this->input->post('gst');
         $featured = $this->input->post('featured');
 
         $gift = array(
             "title" => $title,
             "description" => $description,
             "price" => $price,
+            "gst" => $gst,
             "featured" => $featured,
         );
 
@@ -150,7 +154,7 @@ class Gift extends CI_Controller {
             mkdir($config['upload_path'], 0777, TRUE);
         }
 
-        $config['allowed_types'] = 'gif|jpg|png';
+        $config['allowed_types'] = 'gif|jpg|jpeg|png';
         $this->load->library('upload', $config);
         if ($this->upload->do_upload('file')) {
             $uploaded_data = $this->upload->data();
@@ -165,4 +169,60 @@ class Gift extends CI_Controller {
         }
     }
 
+    public function category() {
+
+        $gift_id = $this->input->get('id');
+        $result['menu'] = $this->Menu_model->get_all();
+        $result['category'] = $this->Category_model->get_all();
+        $result['sub_category'] = $this->Sub_category_model->get_all();
+        $result['gift'] = $this->Gift_model->get_by_id($gift_id);
+        $result['gift_category'] = $this->Gift_model->get_category($gift_id);
+        $this->load->view('admin/header');
+        $this->load->view('admin/sidebar');
+        $this->load->view('admin/gift_category', $result);
+        $this->load->view('admin/footer');
+    }
+
+    public function save_category() {
+
+        $category = $this->input->post('category');
+        $gift_id = $this->input->post('gift_id');
+        foreach ($category as $c) {
+            $c1 = explode(',', $c);
+            $menu_id = $c1[0];
+            $category_id = $c1[1];
+            $sub_category_id = $c1[2];
+            $gift_category[] = array(
+                'gift_id' => $gift_id,
+                'menu_id' => $menu_id,
+                'category_id' => $category_id,
+                'sub_category_id' => $sub_category_id
+            );
+        }
+
+        $this->Gift_model->delete_category($gift_id);
+
+        $inserted = $this->Gift_model->save_category($gift_category);
+        if ($inserted > 0) {
+            $this->session->set_flashdata('msg', 'Gift category has been saved successfully');
+            //$this->session->set_flashdata('msg', "Sub category has been inserted successfully.");
+        } else {
+            $this->session->set_flashdata('err', 'Gift category could not be be saved. Please try again later.11');
+        }
+        redirect(base_url() . 'admin/gift');
+    }
+
+    public function unique() {
+        $gift_id = $this->input->post('gift_id');
+        $title = $this->input->post('title');
+        $total_record = $this->Gift_model->check_for_unique_gift($gift_id, $title);
+        //if(count)
+        $valid = true;
+        if ($total_record > 0) {
+            $valid = false;
+        }
+        echo json_encode(array(
+            'valid' => $valid
+        ));
+    }
 }

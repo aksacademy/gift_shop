@@ -1,6 +1,6 @@
 <?php
 
-class Menu extends CI_Controller {
+class Menu extends Admin_Controller {
 
     public function index() {
 
@@ -66,4 +66,17 @@ class Menu extends CI_Controller {
         redirect(base_url() . 'admin/menu/index');
     }
 
+    public function unique() {
+        $menu_id = $this->input->post('menu_id');
+        $menu_name = $this->input->post('menu_name');
+        $total_record = $this->Menu_model->check_for_unique_menu($menu_id, $menu_name);
+        //if(count)
+        $valid = true;
+        if ($total_record > 0) {
+            $valid = false;
+        }
+        echo json_encode(array(
+            'valid' => $valid
+        ));
+    }
 }

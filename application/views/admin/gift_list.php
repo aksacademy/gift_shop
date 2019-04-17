@@ -1,4 +1,4 @@
-<title>Gift Item</title>
+<title>Gift Item | <?php echo $this->config->item('app_name'); ?></title>
 <section role="main" class="content-body">
     <header class="page-header">
         <h2>Gift Item</h2>
@@ -27,8 +27,7 @@
     <section class="panel">
         <header class="panel-heading">
             <div class="panel-actions">
-                <a href="#" class="fa fa-caret-down"></a>
-                <a href="#" class="fa fa-times"></a>
+                <a href="<?php echo base_url() ?>admin/gift/add" class="fa fa-plus"></a>
             </div>
 
             <h2 class="panel-title">List of Gift Items</h2>
@@ -40,6 +39,7 @@
                         <th>#</th>
                         <th>Title</th>
                         <th>Price</th>
+                        <th>Gst Rate (%)</th>
                         <th>Featured</th>
                         <th>Action</th>
                     </tr>
@@ -54,6 +54,7 @@
                             <td><?php echo $srno ?></td>
                             <td><?php echo $g->title ?></td>
                             <td><span class="fa fa-rupee"> <?php echo $g->price ?></span></td>
+                            <td><?php echo $g->gst ?></span></td>
                             <td><?php
                                 if ($g->featured == true) {
                                     echo 'Yes';
@@ -65,6 +66,8 @@
                                 <a href="<?php echo base_url() ?>admin/gift/edit?id=<?php echo $g->gift_id ?>"><i class="fa fa-pencil"></i></a>
                                 <a onclick="return confirm('Do you really want to delete this record?')" href="<?php echo base_url() ?>admin/gift/delete?id=<?php echo $g->gift_id ?>"><i class="fa fa-trash-o"></i></a>
                                 <a href="<?php echo base_url() ?>admin/gift/gallery?id=<?php echo $g->gift_id ?>"><i class="fa fa-image"></i></a>
+                                <a href="<?php echo base_url() ?>admin/shipping_charge?id=<?php echo $g->gift_id ?>"><i class="fa fa-rupee"></i></a>
+                                <a href="<?php echo base_url() ?>admin/gift/category?id=<?php echo $g->gift_id ?>"><i class="fa fa-list"></i></a>
                             </td>
                         </tr>
                         <?php

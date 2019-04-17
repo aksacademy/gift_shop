@@ -1,10 +1,10 @@
 
 
 
-<title>Gift Item</title>
+<title>Gift Item Gallery | <?php echo $this->config->item('app_name'); ?></title>
 <section role="main" class="content-body">
     <header class="page-header">
-        <h2>Gift Item</h2>
+        <h2>Gift Item Gallery</h2>
 
     </header>
     <div class="row">

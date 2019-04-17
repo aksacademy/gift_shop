@@ -15,7 +15,7 @@
                 response = JSON.parse(response);
                 //alert(response);
                 $("#category_id").empty();
-                $("#category_id").append("<option>Select Category</option>");
+                $("#category_id").append("<option value=''>Select Category</option>");
                 for (var i = 0; i < response.length; i++)
                 {
                     $("#category_id").append("<option value=" + response[i]['category_id'] + ">" + response[i]['category_name'] + "</option>");
@@ -145,7 +145,7 @@
         <h2>Sub Category</h2>
 
     </header>
-    
+
     <div class="row">
         <div class="col-lg-12">
             <section class="panel">
@@ -154,12 +154,12 @@
                 </header>
 
                 <div class="panel-body">
-                    <form class="form-horizontal form-bordered">
+                    <form class="form-horizontal form-bordered" id="subCategoryForm">
                         <div class="form-group">
                             <div class="col-md-3">
 
                                 <select name="menu_id" id="menu_id" data-plugin-selectTwo class="form-control populate input-sm mb-md" onchange="fetch_category(this.value)">
-                                    <option>Select Menu</option>
+                                    <option value="">Select Menu</option>
                                     <?php foreach ($menu as $m) {
                                         ?><option value="<?php echo $m->menu_id; ?>"><?php echo $m->menu_name; ?></option><?php ?>
 
@@ -170,7 +170,7 @@
                             <div class="col-md-3">
 
                                 <select name="category_id" id="category_id" data-plugin-selectTwo class="form-control populate input-sm mb-md" onchange="fetch_sub_category(this.value)">
-                                    <option>Select Category</option>
+                                    <option value="">Select Category</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -207,3 +207,81 @@
         </div>
     </section>
 </section>
+
+<script>
+    $(document).ready(function () {
+        $('#subCategoryForm').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                menu_id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The menu name is required'
+                        },
+                        remote: {
+                            url: '<?php echo base_url() ?>admin/sub_category/unique',
+                            type: 'post',
+                            data: function (validator) {
+                                return{
+                                    sub_category_id: validator.getFieldElements('sub_category_id').val(),
+                                    sub_category_name: validator.getFieldElements('sub_category_name').val(),
+                                    category_id: validator.getFieldElements('category_id').val(),
+                                };
+
+                                //category_id: 12
+                            },
+                            message: 'This sub category already exists'
+                        }
+                    }
+                },
+                category_id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The menu name is required'
+                        },
+                        remote: {
+                            url: '<?php echo base_url() ?>admin/sub_category/unique',
+                            type: 'post',
+                            data: function (validator) {
+                                return{
+                                    sub_category_id: validator.getFieldElements('sub_category_id').val(),
+                                    sub_category_name: validator.getFieldElements('sub_category_name').val(),
+                                    menu_id: validator.getFieldElements('menu_id').val(),
+                                };
+
+                                //category_id: 12
+                            },
+                            message: 'This sub category already exists'
+                        }
+                    }
+                },
+                sub_category_name: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The sub category name is required'
+                        },
+                        remote: {
+                            url: '<?php echo base_url() ?>admin/sub_category/unique',
+                            type: 'post',
+                            data: function (validator) {
+                                return{
+                                    sub_category_id: validator.getFieldElements('sub_category_id').val(),
+                                    category_id: validator.getFieldElements('category_id').val(),
+                                    menu_id: validator.getFieldElements('menu_id').val(),
+                                };
+
+                                //category_id: 12
+                            },
+                            message: 'This sub category already exists'
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>

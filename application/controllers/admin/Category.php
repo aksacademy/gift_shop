@@ -1,10 +1,10 @@
 <?php
 
-class Category extends CI_Controller{
+class Category extends Admin_Controller{
     public function index()
     {
         $result['menu'] = $this->Menu_model->get_all();
-        $result['category'] = $this->Category_model->get_all();
+        $result['category'] = $this->Category_model->get_all_with_menu();
         
         $this->load->view('admin/header');
         $this->load->view('admin/sidebar');
@@ -77,4 +77,19 @@ class Category extends CI_Controller{
         redirect(base_url() . 'admin/category');
     }
     
+    
+    public function unique() {
+        $category_id = $this->input->post('category_id');
+        $category_name = $this->input->post('category_name');
+        $menu_id = $this->input->post('menu_id');
+        $total_record = $this->Category_model->check_for_unique_category($category_id, $category_name, $menu_id);
+        //if(count)
+        $valid = true;
+        if ($total_record > 0) {
+            $valid = false;
+        }
+        echo json_encode(array(
+            'valid' => $valid
+        ));
+    }
 }
